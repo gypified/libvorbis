@@ -45,7 +45,15 @@
       # platform and arch-specific headers
       'config/<(OS)/<(target_arch)',
       'include',
+      'lib',
     ],
+    'direct_dependent_settings': {
+      'include_dirs': [
+        # platform and arch-specific headers
+        'config/<(OS)/<(target_arch)',
+        'include',
+      ],
+    },
     'conditions': [
       ['OS=="mac"', {
         'defines': [
@@ -67,8 +75,9 @@
       'target_name': 'vorbisenc',
       'product_prefix': 'lib',
       'type': 'static_library',
+      'dependencies': [ 'vorbis' ],
       'sources': [
-        'lib/libvorbisenc.c'
+        'lib/vorbisenc.c'
       ]
     },
 
@@ -77,8 +86,9 @@
       'target_name': 'vorbisfile',
       'product_prefix': 'lib',
       'type': 'static_library',
+      'dependencies': [ 'vorbis' ],
       'sources': [
-        'lib/libvorbisfile.c'
+        'lib/vorbisfile.c'
       ]
     },
 
@@ -95,7 +105,7 @@
         'lib/window.c',
         'lib/lsp.c',
         'lib/lpc.c',
-        'lib/analysis.c'
+        'lib/analysis.c',
         'lib/synthesis.c',
         'lib/psy.c',
         'lib/info.c',
@@ -109,20 +119,17 @@
         'lib/lookup.c',
         'lib/bitrate.c',
       ],
-      'direct_dependent_settings': {
-        'include_dirs': [
-          # platform and arch-specific headers
-          'config/<(OS)/<(target_arch)',
-          'include',
-        ],
-      },
     },
 
     {
       'target_name': 'test',
       'type': 'executable',
-      'dependencies': [ 'vorbis' ],
-      'sources': [ 'test.c' ]
+      'dependencies': [ 'vorbisenc' ],
+      'libraries': [
+        '-logg' # dependants that use "vorbis" are responsible for making
+                # the ogg symbols visible for the resulting executable
+      ],
+      'sources': [ 't.c' ]
     },
   ]
 }
