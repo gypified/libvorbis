@@ -129,7 +129,7 @@
         '-logg' # dependants that use "vorbis" are responsible for making
                 # the ogg symbols visible for the resulting executable
       ],
-      'sources': [ 't.c' ]
+      'sources': [ 'examples/decoder_example.c' ]
     },
   ]
 }
