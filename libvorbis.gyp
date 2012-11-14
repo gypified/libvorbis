@@ -8,7 +8,9 @@
 
 {
   'variables': {
-    'target_arch%': 'ia32', # built for a 32-bit CPU by default
+    'target_arch%': 'ia32', # build for a 32-bit CPU by default
+    'ogg_include_dirs%': [],
+    'ogg_libraries%': [ '-logg' ],
   },
   'target_defaults': {
     'default_configuration': 'Debug',
@@ -44,6 +46,8 @@
     'include_dirs': [
       # platform and arch-specific headers
       'config/<(OS)/<(target_arch)',
+      # the location of the libogg header files
+      '<@(ogg_include_dirs)',
       'include',
       'lib',
     ],
@@ -51,8 +55,15 @@
       'include_dirs': [
         # platform and arch-specific headers
         'config/<(OS)/<(target_arch)',
+        # the location of the libogg header files
+        '<@(ogg_include_dirs)',
         'include',
       ],
+    },
+    'link_settings': {
+      'libraries': [
+        '<@(ogg_libraries)',
+      ]
     },
     'conditions': [
       ['OS=="mac"', {
@@ -125,10 +136,6 @@
       'target_name': 'test',
       'type': 'executable',
       'dependencies': [ 'vorbisenc' ],
-      'libraries': [
-        '-logg' # dependants that use "vorbis" are responsible for making
-                # the ogg symbols visible for the resulting executable
-      ],
       'sources': [ 'examples/decoder_example.c' ]
     },
   ]
